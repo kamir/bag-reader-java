@@ -19,7 +19,7 @@ Clone the git-repository: https://github.com/kamir/rosbag-reader-java
 Build the project and install the artifact to your local Maven repository.
 
 ```bash
-mvn clean compile install -U
+mvn clean compile package install -U
 ```
 
 Now, please add the following dependency to your Maven pom.xml:
@@ -28,9 +28,9 @@ Now, please add the following dependency to your Maven pom.xml:
 
 ```xml
 <dependency>
-    <groupId>com.github.swri-robotics</groupId>
+    <groupId>com.github.kamir</groupId>
     <artifactId>bag-reader-java</artifactId>
-    <version>1.9.0</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 

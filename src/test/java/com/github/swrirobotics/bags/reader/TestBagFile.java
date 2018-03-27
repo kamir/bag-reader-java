@@ -63,6 +63,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
         });
         assertEquals(1, count[0]);
     }
@@ -82,6 +87,11 @@ public class TestBagFile {
                 assertEquals(0, values[1]);
                 assertEquals(126, values[2]);
                 count[0]++;
+                return true;
+            }
+
+            @Override
+            public boolean postProcessTrigger() {
                 return true;
             }
         });
@@ -107,6 +117,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
         });
         assertEquals(1, count[0]);
     }
@@ -129,6 +144,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -152,6 +173,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -173,6 +200,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -196,6 +229,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -217,6 +256,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -240,6 +285,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -261,6 +312,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -284,6 +341,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -305,6 +367,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -328,6 +395,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -349,6 +421,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -372,6 +449,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -392,6 +474,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -415,6 +502,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -436,6 +528,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -459,6 +556,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -479,6 +581,11 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }
@@ -527,6 +634,12 @@ public class TestBagFile {
                 count[0]++;
                 return true;
             }
+
+            @Override
+            public boolean postProcessTrigger() {
+                return true;
+            }
+
         });
         assertEquals(1, count[0]);
     }

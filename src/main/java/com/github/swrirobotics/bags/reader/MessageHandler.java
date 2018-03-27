@@ -46,4 +46,13 @@ public interface MessageHandler {
      * @return false to cease processing, true to continue.
      */
     boolean process(MessageType message, final Connection connection);
+
+    /**
+     * After processing multiple messages, the handler can decide to flush a group of messages in one batch.
+     * In case of a full time series aggregation procedure, a final trigger is required at the
+     * end of the message stream from one topic.
+     *
+     * @return true if flush was done, false in case of error
+     */
+    boolean postProcessTrigger();
 }

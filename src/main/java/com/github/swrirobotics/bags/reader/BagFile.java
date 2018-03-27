@@ -35,6 +35,7 @@ import com.github.swrirobotics.bags.reader.exceptions.UnknownMessageException;
 import com.github.swrirobotics.bags.reader.messages.serialization.MessageType;
 import com.github.swrirobotics.bags.reader.messages.serialization.MsgIterator;
 import com.github.swrirobotics.bags.reader.records.*;
+import com.github.swrirobotics.bags.reader.vocabulary.BagCAT;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -42,11 +43,15 @@ import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -88,6 +93,7 @@ public class BagFile {
     private Chunk myPreviousChunk = null;
 
     private static final Logger myLogger = LoggerFactory.getLogger(BagFile.class);
+
 
     private static class MessageIndex implements Comparable<MessageIndex> {
         public long fileIndex;
@@ -303,13 +309,21 @@ public class BagFile {
      * @throws BagReaderException If there is an error reading the bag.
      */
     public void forMessagesOfType(String messageType, MessageHandler handler) throws BagReaderException {
+
         for (Connection conn : myConnectionsByType.get(messageType)) {
             try (FileChannel channel = getChannel()) {
+
                 MsgIterator iter = new MsgIterator(myChunkInfos, conn, channel);
 
+                System.out.println("# Start iteration on FileChannel in BagFile ...");
+
                 while (iter.hasNext()) {
+
                     boolean keepWorking = handler.process(iter.next(), conn);
-                    if (!keepWorking) {
+
+                    if (!keepWorking ) {
+
+
                         return;
                     }
                 }
@@ -317,6 +331,11 @@ public class BagFile {
             catch (IOException e) {
                 throw new BagReaderException(e);
             }
+
+            System.out.println("# Stop iteration on FileChannel in BagFile ...");
+
+            // the handler has to flush the messages and to close the
+            handler.postProcessTrigger();
         }
     }
 
@@ -338,6 +357,7 @@ public class BagFile {
                 while (iter.hasNext()) {
                     boolean keepWorking = handler.process(iter.next(), conn);
                     if (!keepWorking) {
+
                         return;
                     }
                 }
@@ -346,6 +366,11 @@ public class BagFile {
                 throw new BagReaderException(e);
             }
         }
+
+        System.out.println("# Stop iteration on FileChannel in BagFile ...");
+
+        // the handler has to flush the messages and to close the
+        handler.postProcessTrigger();
     }
     /**
      * Searches through every connection in the bag for one with the specified
@@ -929,6 +954,87 @@ public class BagFile {
     }
 
     /**
+     * This method builds a triple representation of the BagFile metadata.
+     */
+    public String printRDFInfo() throws Exception {
+
+        // some definitions
+        String bagCatalogURI  = "http://com.mybiz.datacatalog/bags";
+        String fullName = "MyBagCatalog";
+
+        // create an empty Model
+        Model model = ModelFactory.createDefaultModel();
+
+        // create the resource for the Catalog
+        Resource bagCatalog = model.createResource(bagCatalogURI);
+        bagCatalog.addProperty(BagCAT.name, fullName);
+
+        // create the resource for a BagFile
+        Resource bagCatalogEntry = model.createResource( this.myPath.toString() );
+        bagCatalogEntry.addProperty( BagCAT.filename , this.myPath.toString() );
+        bagCatalogEntry.addProperty( BagCAT.nrOfMessages , ""+12345 );
+        bagCatalogEntry.addProperty( BagCAT.version, this.getVersion() );
+        bagCatalogEntry.addProperty( BagCAT.compression, this.getCompressionType() );
+        bagCatalogEntry.addProperty( BagCAT.byteSize, "" + this.getPath().toFile().length());
+        bagCatalogEntry.addProperty( BagCAT.sizeInMB, (((double) this.getPath().toFile().length()) / 1024.0) + " MB");
+
+        bagCatalogEntry.addProperty( BagCAT.end , (this.getEndTime() == null ?
+                "Unknown" : (this.getEndTime().toString() + " (" + this.getEndTime().getTime() + ")")) );
+
+        bagCatalogEntry.addProperty( BagCAT.start , (this.getStartTime() == null ?
+                "Unknown" : (this.getStartTime().toString() + " (" + this.getStartTime().getTime() + ")")) );
+
+        bagCatalogEntry.addProperty( BagCAT.duration , this.getDurationS() + " s");
+        bagCatalogEntry.addProperty( BagCAT.nrOfMessages, this.getMessageCount() + "" );
+        bagCatalogEntry.addProperty( BagCAT.availableInBagCatalog, bagCatalog) ;
+
+
+        /**
+         * TODO: Track also message types and topics in the metadata graph ...
+         */
+        for (Map.Entry<String, String> entry : this.getMessageTypes().entries()) {
+
+            Resource type  = model.createResource( BagCAT.BagFileType );
+
+            type.addProperty( BagCAT.messageType,  entry.getKey() );
+            type.addProperty( BagCAT.md5, entry.getValue() );
+            type.addProperty( BagCAT.availableInBagFile, bagCatalogEntry );
+
+        }
+
+        for (TopicInfo topic : this.getTopics()) {
+
+            Resource topicInBag  = model.createResource( BagCAT.BagFileTopic );
+
+            topicInBag.addProperty( BagCAT.topicName, topic.getName() );
+            topicInBag.addProperty( BagCAT.md5, topic.getMessageMd5Sum() );
+            topicInBag.addProperty( BagCAT.nrOfConnections, ""+topic.getConnectionCount() );
+            topicInBag.addProperty( BagCAT.messageType,  topic.getMessageType() );
+            topicInBag.addProperty( BagCAT.availableInBagFile, bagCatalogEntry );
+
+        }
+
+
+
+        /**
+         * Persistence in a local folder.
+         */
+        // String syntax1 = "RDF/XML-ABBREV"; // also try "N-TRIPLE" and "TURTLE"
+        // String syntax2 = "N-TRIPLE"; // also try "N-TRIPLE" and "TURTLE"
+        String syntax3 = "TURTLE"; // also try "N-TRIPLE" and "TURTLE"
+        StringWriter out = new StringWriter();
+        model.write(out, syntax3);
+
+        // the BagCAT implementation is responsible for persistence of the model data.
+        BagCAT.persistModel( model );
+
+        String result = out.toString();
+        // System.out.println(result);
+        return result;
+    }
+
+
+    /**
      * Prints a block of text listing various bits of metadata about a bag
      * including its duration, start and end times, size, number of messages,
      * and the number of different message types and topics used.  It's fairly
@@ -959,3 +1065,6 @@ public class BagFile {
         }
     }
 }
+
+
+

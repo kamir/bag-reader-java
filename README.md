@@ -14,9 +14,17 @@ Java 1.8 is required. Compilation requires Maven 3.0.4 or higher.
 
 ## Obtaining
 
-Clone this repository. Build the project and install the artifact to your local Maven repository.
+Clone the git-repository: https://github.com/kamir/rosbag-reader-java
+
+Build the project and install the artifact to your local Maven repository.
+
+```bash
+mvn clean compile install -U
+```
 
 Now, please add the following dependency to your Maven pom.xml:
+
+
 
 ```xml
 <dependency>

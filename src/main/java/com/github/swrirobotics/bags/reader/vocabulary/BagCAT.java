@@ -39,7 +39,7 @@ public class BagCAT {
 
             for( File ttF : modelFragments ) {
                 System.out.println(">>> load model fragment : " + ttF.getAbsolutePath() );
-                model.read( ttF.getAbsolutePath() );
+                model.read( "file://" + ttF.getAbsolutePath() );
             }
 
             InfModel inf = ModelFactory.createRDFSModel( model );
@@ -69,7 +69,7 @@ public class BagCAT {
 
     synchronized public static void persistModel( Model m ) throws Exception {
 
-        File f = new File( "./out/_ciw_metastore");
+        File f = new File( "out/_ciw_metastore");
 
         if ( f.exists() ) {
 

@@ -8,9 +8,12 @@ It does not support writing to or playing back bag files; I would have no object
 
 ## Requirements
 
-Java 1.7 or higher is required.  Compilation requires Maven 3.0.4 or higher.
+Java 1.8 is required. Compilation requires Maven 3.0.4 or higher.
 
 ## Obtaining
+
+Clone the git-repository:
+
 
 Add the following dependency to your Maven pom.xml:
 

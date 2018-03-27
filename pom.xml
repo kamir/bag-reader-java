@@ -3,21 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.jcabi</groupId>
-        <artifactId>parent</artifactId>
-        <version>0.48.4</version>
-    </parent>
-    <groupId>com.github.swri-robotics</groupId>
-    <artifactId>bag-reader-java</artifactId>
+
+    <groupId>com.github.kamir</groupId>
+    <artifactId>rosbag-reader-java</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.0</version>
-    <name>bag-reader-java</name>
+    <version>2.0.1</version>
+
+    <name>rosbag-reader-java</name>
+
     <url>https://github.com/swri-robotics/bag-reader-java</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java-version>1.7</java-version>
+        <java-version>1.8</java-version>
     </properties>
+
+
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -35,6 +37,25 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.16</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-core -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-csv</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -102,4 +123,40 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+
+        <repository>
+            <id>mvn.repo</id>
+            <url>https://mvnrepository.com/artifact</url>
+            <name>Public Maven Repositories</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>cdh.repo</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+            <name>Cloudera Repositories</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>cdh.snapshots.repo</id>
+            <url>https://repository.cloudera.com/artifactory/libs-snapshot-local</url>
+            <name>Cloudera Snapshots Repository</name>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+
+    </repositories>
+
+
 </project>

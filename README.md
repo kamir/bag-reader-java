@@ -4,7 +4,9 @@ This is a Java library intended for reading information from and deserializing [
 
 It is capable of reading [Version 2.0](http://wiki.ros.org/Bags/Format/2.0) bag files and does not require ROS or any other non-Java library to be installed.
 
-It does not support writing to or playing back bag files; I would have no objections to adding that functionality, but I haven't needed it for my purposes.
+It does not support writing to or playing back bag files. 
+
+The main purpose is fact extraction. This means, metadata (about the ROSBAG file and about the included topics) will be extracted and exposed in RDF. All measurements will be exported/extracted in a way which is easily compatible with data management platforms. CSV files, time series buckets and AVRO files are examples for file formats which fit better into an analytics workfow.  
 
 ## Requirements
 
@@ -22,7 +24,7 @@ mvn clean compile install -U
 
 Now, please add the following dependency to your Maven pom.xml:
 
-Add the following dependency to your Maven pom.xml:
+
 
 ```xml
 <dependency>

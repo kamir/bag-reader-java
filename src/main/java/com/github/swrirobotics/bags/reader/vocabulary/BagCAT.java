@@ -50,6 +50,9 @@ public class BagCAT {
 
             System.out.println(">>> Inspect metadata model " );
 
+            // Never forget to init() ARQ !!!
+            org.apache.jena.query.ARQ.init();
+
             InfModel inf = ModelFactory.createRDFSModel( model );
 
             String queryString = "SELECT ?x ?y ?z WHERE { ?x ?y ?z }";

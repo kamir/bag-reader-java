@@ -7,40 +7,48 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
- * Constants for the W3C Data Catalog Vocabulary.
+ * This Project provides a BAG-Database like the discontinued "BAG Bunker" (https://github.com/bosch-ros-pkg/bagbunker).
+ *
+ * This BagFile catalog extends the properties of the W3C Data Catalog Vocabulary.
  *
  * @see <a href="https://www.w3.org/TR/vocab-dcat/">Data Catalog Vocabulary</a>
  *
  *
  *
+ * Related project:
  *
- *
+ * Metadata store for BagData:
+ * ===========================
  * https://github.com/swri-robotics/bag-database
- *
- * This Project provides a BAG-Database like the discontinued "BAG Bunker" (https://github.com/bosch-ros-pkg/bagbunker).
- *
- *
- *
- *
- *
  */
 public class BagCAT {
 
+    /**
+     * A BagCAT (Bag Catalog) contains metadata about Bag files.
+     *
+     * The catalog is stored in RDF format and can be queried via
+     * SPARQL queries.
+     *
+     * @return
+     */
     public static Model loadCatalogData() {
 
         Model model = ModelFactory.createDefaultModel();
 
-        File f = new File( "./out/_ciw_metastore");
-
-        System.out.println(">>> CATALOG folder: " + f.getAbsolutePath() );
+        File f = new File( "out/_ciw_metastore");
 
         if ( f.exists() ) {
+
+            System.out.println(">>> CATALOG folder: " + f.getAbsolutePath() );
+
             File[] modelFragments = f.listFiles( new TTLFileFilter() );
 
             for( File ttF : modelFragments ) {
                 System.out.println(">>> load model fragment : " + ttF.getAbsolutePath() );
-                model.read( "file://" + ttF.getAbsolutePath() );
+                model.read( "file://" + ttF.getAbsolutePath(), "TTL" );
             }
+
+            System.out.println(">>> Inspect metadata model " );
 
             InfModel inf = ModelFactory.createRDFSModel( model );
 
@@ -60,11 +68,10 @@ public class BagCAT {
 
         }
         else {
-
+            System.out.println("!!!ERROR!!! >>>  NO CATALOG folder found in path : " + f.getAbsolutePath() + " !!!");
         }
 
         return model;
-
     }
 
     synchronized public static void persistModel( Model m ) throws Exception {
@@ -166,9 +173,5 @@ public class BagCAT {
     public static final Property nrOfConnections = m.createProperty(NS + "nrOfConnections");
 
     public static final Property messageType = m.createProperty(NS + "messageType");
-
-
-
-
 
 }

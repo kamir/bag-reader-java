@@ -954,12 +954,12 @@ public class BagFile {
     }
 
     /**
-     * This method builds a triple representation of the BagFile metadata.
+     * This method builds a triple representation of the BagFile metadata catalog.
      */
     public String printRDFInfo() throws Exception {
 
         // some definitions
-        String bagCatalogURI  = "http://com.mybiz.datacatalog/bags";
+        String bagCatalogURI  = "http://org.bigbiz.datacatalog/bags";
         String fullName = "MyBagCatalog";
 
         // create an empty Model
@@ -990,7 +990,7 @@ public class BagFile {
 
 
         /**
-         * TODO: Track also message types and topics in the metadata graph ...
+         * Export the message types, used in this BagFile
          */
         for (Map.Entry<String, String> entry : this.getMessageTypes().entries()) {
 
@@ -1002,6 +1002,10 @@ public class BagFile {
 
         }
 
+
+        /**
+         * Export the toipcs, used in this BagFile
+         */
         for (TopicInfo topic : this.getTopics()) {
 
             Resource topicInBag  = model.createResource( BagCAT.BagFileTopic );
@@ -1017,20 +1021,29 @@ public class BagFile {
 
 
         /**
-         * Persistence in a local folder.
+         * Persistence in a local folder ... using the TURTLE format.
          */
+
         // String syntax1 = "RDF/XML-ABBREV"; // also try "N-TRIPLE" and "TURTLE"
         // String syntax2 = "N-TRIPLE"; // also try "N-TRIPLE" and "TURTLE"
         String syntax3 = "TURTLE"; // also try "N-TRIPLE" and "TURTLE"
+
         StringWriter out = new StringWriter();
         model.write(out, syntax3);
 
-        // the BagCAT implementation is responsible for persistence of the model data.
+        /**
+         *
+         *  Delegation:
+         *      the BagCAT implementation is responsible for persistence of the model data.
+         *
+         */
         BagCAT.persistModel( model );
 
         String result = out.toString();
-        // System.out.println(result);
+
+        // The full model formatted in the TURTLE format is given back.
         return result;
+
     }
 
 
